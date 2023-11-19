@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const mysql = require("mysql2");
 const e = require("express");
+const path = require("path");
 
 const app = express();
 
@@ -12,6 +13,13 @@ const conn = mysql.createConnection({
     password: "root",
     database: "bicicentro"
 });
+
+
+app.get('/',function(req,res){
+    res.sendFile(path.join(__dirname ,"Principal.html"));
+});
+
+
 // Lista de trabajadores
 app.get("/trabajadores", function (req, res) {
     let sql = "select * from trabajadores";
@@ -111,6 +119,20 @@ app.get("/sedes/trabajadores/:idsede",(req,res) => {
     });
 
 });
+
+
+
+// HTMLS
+app.get('/listaTrabajadores', function (req, res) {
+    let sql = 'SELECT * FROM trabajadores';
+    conn.query(sql, (err, result, fields) => {
+        if (err) throw err;
+        res.render('trabajadores', { trabajadores: result });
+    });
+});
+
+
+
 
 
 app.listen(3000,function(){
